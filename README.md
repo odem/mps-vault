@@ -25,7 +25,7 @@ SSH access to your Bitwarden vault. No app install needed.
 | `bw-list` | `bvl` | List all items (`bw-list <name>` for details) |
 | `bw-fzf` | `bvc` | Interactive search (fzf) |
 | `bw-getpw` | `bvg` | Get last selected password |
-| `bw-add` | `bva` | Add item: `bw-add <name> <user> <pass> [folder]` |
+| `bw-add` | `bva` | Add item: `bw-add <name> <user> <pass> [folder] [url]` |
 | `bw-remove` | `bvr` | Remove item: `bw-remove <name> [--force]` |
 
 ## Configuration
