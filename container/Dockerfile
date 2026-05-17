@@ -57,6 +57,9 @@ RUN chmod +x /usr/local/bin/bw-getpw
 COPY --chown=vault:vault bw-add.sh /usr/local/bin/bw-add
 RUN chmod +x /usr/local/bin/bw-add
 
+COPY --chown=vault:vault bw-remove.sh /usr/local/bin/bw-remove
+RUN chmod +x /usr/local/bin/bw-remove
+
 # Add health check script (run as root)
 COPY healthcheck.sh /usr/local/bin/healthcheck.sh
 RUN chmod +x /usr/local/bin/healthcheck.sh
