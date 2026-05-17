@@ -144,13 +144,13 @@ Short aliases for common commands (add to your shell config):
 
 ```bash
 # bv = bitwarden vault prefix
-alias bvs='ssh vault bvs'   # state
-alias bva='ssh vault bva'   # add (pass arguments after)
-alias bvr='ssh vault bvr'   # remove (pass arguments after)
-alias bvl='ssh vault bvl'   # list
-alias bvc='ssh vault bvc'   # choose (fzf)
-alias bvg='ssh vault bvg'   # get password
-alias bvu='ssh vault bvu'   # unlock
+alias bvs='ssh vault bw-state'    # state
+alias bva='ssh vault bw-add'      # add (pass arguments after)
+alias bvr='ssh vault bw-remove'    # remove (pass arguments after)
+alias bvl='ssh vault bw-list'     # list
+alias bvc='ssh vault bw-fzf'      # choose (fzf)
+alias bvg='ssh vault bw-getpw'    # get password
+alias bvu='ssh vault bw-unlock'   # unlock
 ```
 
 ### Usage
