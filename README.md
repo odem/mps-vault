@@ -14,7 +14,7 @@ SSH access to your Bitwarden vault. No app install needed.
 1. Get API key: Bitwarden → Settings → Security → Security Keys → New API Key
 2. `cp env/.env-example env/.env` → edit with your values
 3. `docker compose up -d`
-4. `ssh vault -p 7777` → `bvu` (unlock) → `bvc` (choose) → `bvg` (get password)
+4. `ssh vault -p 7777` → `bw-unlock` (enter master password) → `bw-fzf` (choose) → `bw-getpw` (get password)
 
 ## Commands
 
@@ -25,8 +25,8 @@ SSH access to your Bitwarden vault. No app install needed.
 | `bw-list` | `bvl` | List all items (`bw-list <name>` for details) |
 | `bw-fzf` | `bvc` | Interactive search (fzf) |
 | `bw-getpw` | `bvg` | Get last selected password |
-| `bw-add` | `bva` | Add item: `bva <name> <user> <pass> [folder]` |
-| `bw-remove` | `bvr` | Remove item: `bvr <name> [--force]` |
+| `bw-add` | `bva` | Add item: `bw-add <name> <user> <pass> [folder]` |
+| `bw-remove` | `bvr` | Remove item: `bw-remove <name> [--force]` |
 
 ## Configuration
 
@@ -73,3 +73,15 @@ alias bvu='ssh vault bw-unlock'
 ## License
 
 MIT - free, open source, no warranties.
+
+## Environment
+
+```
+SSH_PORT=7777
+BW_SERVER=https://vault.bitwarden.eu
+BW_CLIENTID=your_client_id
+BW_CLIENTSECRET=your_client_secret
+BW_SESSION_TTL=30
+BW_OUTPUT_FILE=/dev/shm/bw_last
+BW_SSH_PUBKEY=ssh-rsa AAAA...
+```
