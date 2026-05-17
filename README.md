@@ -18,7 +18,7 @@ You have a central server (home server, NAS, Raspberry Pi) running this containe
 - **SSH access** to your Bitwarden vault via CLI
 - **Interactive search** with fzf - fuzzy find your passwords
 - **Session persistence** - unlock once, stays unlocked for 30 min
-- **Password retrieval** - single command outputs password and deletes it
+- **Password retrieval** - single command outputs password to file and deletes it on retrieval
 
 ## Quick Start
 
@@ -47,11 +47,13 @@ BW_SSH_PUBKEY=ssh-rsa AAAA...             # your public key
 docker compose up -d
 ```
 
+> **Tip:** Set `SSH_PORT=` (empty) in `.env` to skip host binding. Access via `docker exec` instead of SSH.
+
 ### 4. Use
 
 ```bash
-# Connect (port from SSH_PORT in .env, default 2222)
-ssh vault@<server-ip> -p ${SSH_PORT:-2222}
+# Connect (port from SSH_PORT in .env, default 7777)
+ssh vault@<server-ip> -p ${SSH_PORT:-7777}
 
 # Inside the container:
 bw-unlock     # enter master password (one time)
@@ -64,7 +66,7 @@ bw-getpw      # print password, then delete it immediately
 ### Get a password in one line (from your local machine)
 
 ```bash
-ssh vault@192.168.1.100 -p ${SSH_PORT:-2222} "bw-fzf && bw-getpw"
+ssh vault@192.168.1.100 -p ${SSH_PORT:-7777} "bw-fzf && bw-getpw"
 ```
 
 ### Use with a password manager integration
@@ -80,7 +82,7 @@ The installer sets up a Kitty plugin. If you use Kitty terminal:
 ### List all logins
 
 ```bash
-ssh vault@192.168.1.100 -p ${SSH_PORT:-2222} bw-list
+ssh vault@YOUR_IP -p ${SSH_PORT:-7777} bw-list
 ```
 
 ## Available Commands
@@ -97,7 +99,7 @@ ssh vault@192.168.1.100 -p ${SSH_PORT:-2222} bw-list
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `SSH_PORT` | SSH port on host | 2222 |
+| `SSH_PORT` | SSH port on host (leave empty to skip host binding) | 7777 |
 | `BW_SERVER` | Bitwarden server URL | Required |
 | `BW_CLIENTID` | API client ID | Required |
 | `BW_CLIENTSECRET` | API client secret | Required |
