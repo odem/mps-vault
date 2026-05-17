@@ -28,7 +28,7 @@ if [ -n "$FOLDER" ] && echo "$FOLDER" | grep -q ' '; then
   exit 1
 fi
 
-EXISTS=$(bw list items | jq -r --arg name "$NAME" '.[] | select(.name == $name) | .id')
+EXISTS=$(bw list items | jq -r --arg name "$(echo $NAME | tr '[:upper:]' '[:lower:]')" '.[] | select(.name | ascii_downcase == $name) | .id')
 if [ -n "$EXISTS" ]; then
   echo "Error: Item already exists: $NAME" >&2
   exit 1
@@ -36,10 +36,12 @@ fi
 
 FOLDER_ID="null"
 if [ -n "$FOLDER" ]; then
-  FOLDER_ID=$(bw list folders | jq -r --arg name "$FOLDER" '.[] | select(.name == $name) | .id')
+  FOLDER_LOWER=$(echo "$FOLDER" | tr '[:upper:]' '[:lower:]')
+  FOLDER_ID=$(bw list folders | jq -r --arg name "$FOLDER_LOWER" '.[] | select(.name | ascii_downcase == $name) | .id')
   if [ "$FOLDER_ID" = "null" ] || [ -z "$FOLDER_ID" ]; then
-    FOLDER_NAME_B64=$(echo -n "$FOLDER" | base64)
-    FOLDER_RESULT=$(bw create folder "$FOLDER_NAME_B64" 2>/dev/null)
+    FOLDER_JSON="{\"name\":\"$FOLDER\"}"
+    FOLDER_JSON_B64=$(echo -n "$FOLDER_JSON" | base64)
+    FOLDER_RESULT=$(bw create folder "$FOLDER_JSON_B64" 2>/dev/null)
     FOLDER_ID=$(echo "$FOLDER_RESULT" | jq -r '.id')
   fi
 fi
@@ -54,23 +56,31 @@ if [ -n "$NOTES" ]; then
   NOTES_JSON="\"$NOTES\""
 fi
 
+escape_json() {
+  printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'
+}
+
+NAME_ESC=$(escape_json "$NAME")
+USERNAME_ESC=$(escape_json "$USERNAME")
+PASSWORD_ESC=$(escape_json "$PASSWORD")
+
 JSON="{"
-JSON="${JSON}\"name\":\"$NAME\","
+JSON="${JSON}\"name\":\"$NAME_ESC\","
 JSON="${JSON}\"type\":1,"
 JSON="${JSON}\"reprompt\":0,"
 JSON="${JSON}\"login\":{"
-JSON="${JSON}\"username\":\"$USERNAME\","
-JSON="${JSON}\"password\":\"$PASSWORD\","
+JSON="${JSON}\"username\":\"$USERNAME_ESC\","
+JSON="${JSON}\"password\":\"$PASSWORD_ESC\","
 JSON="${JSON}\"uris\":$URI_JSON"
 JSON="${JSON}},"
 JSON="${JSON}\"notes\":$NOTES_JSON,"
-JSON="${JSON}\"folderId\":$FOLDER_ID,"
+JSON="${JSON}\"folderId\":\"$FOLDER_ID\","
 JSON="${JSON}\"favorite\":false"
 JSON="${JSON}}"
 
 JSON_B64=$(echo -n "$JSON" | base64)
 
-RESULT=$(bw create item "$JSON_B64" 2>/dev/null)
+RESULT=$(bw create item "$JSON_B64" 2>&1)
 
 if echo "$RESULT" | jq -e '.id' >/dev/null 2>&1; then
   if [ -n "$FOLDER" ]; then
