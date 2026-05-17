@@ -70,10 +70,6 @@ alias bvg='ssh vault bw-getpw'
 alias bvu='ssh vault bw-unlock'
 ```
 
-## License
-
-MIT - free, open source, no warranties.
-
 ## Environment
 
 ```
@@ -85,3 +81,7 @@ BW_SESSION_TTL=30
 BW_OUTPUT_FILE=/dev/shm/bw_last
 BW_SSH_PUBKEY=ssh-rsa AAAA...
 ```
+
+## License
+
+MIT - free, open source, no warranties.
