@@ -145,17 +145,12 @@ Short aliases for common commands (add to your shell config):
 ```bash
 # bv = bitwarden vault prefix
 alias bvs='ssh vault bvs'   # state
-alias bva='ssh vault bva'   # add (needs args)
-alias bvr='ssh vault bvr'   # remove (needs args)
+alias bva='ssh vault bva'   # add (pass arguments after)
+alias bvr='ssh vault bvr'   # remove (pass arguments after)
 alias bvl='ssh vault bvl'   # list
 alias bvc='ssh vault bvc'   # choose (fzf)
 alias bvg='ssh vault bvg'   # get password
 alias bvu='ssh vault bvu'   # unlock
-
-# Functions for commands with arguments
-bva() { ssh vault bva "$@"; }
-bvr() { ssh vault bvr "$@"; }
-bvl() { ssh vault bvl "$@"; }
 ```
 
 ### Usage
@@ -166,8 +161,8 @@ bvl              # list all
 bvl github       # list specific item
 bvc              # choose password interactively
 bvg              # get last selected password
-bva user pass    # add item (arguments: name user pass [folder])
-bvr name --force # remove item
+bva user pass folder  # add item (name user pass [folder])
+bvr name --force     # remove item
 bvu              # unlock vault
 ```
 
