@@ -33,13 +33,7 @@ You have a central server (home server, NAS, Raspberry Pi) running this containe
 cp env/.env-example env/.env
 ```
 
-Edit `env/.env`:
-```
-BW_SERVER=https://vault.bitwarden.eu      # or your self-hosted URL
-BW_CLIENTID=your_client_id
-BW_CLIENTSECRET=your_client_secret
-BW_SSH_PUBKEY=ssh-rsa AAAA...             # your public key
-```
+Edit `env/.env` with your values. See [Environment Variables](#environment-variables) section for all options.
 
 ### 3. Run
 
@@ -66,7 +60,7 @@ bw-getpw      # print password, then delete it immediately
 ### Get a password in one line (from your local machine)
 
 ```bash
-ssh vault@192.168.1.100 -p ${SSH_PORT:-7777} "bw-fzf && bw-getpw"
+ssh vault@192.168.1.100 -p ${SSH_PORT:-7777} "bvc && bvg"
 ```
 
 ### Use with a password manager integration
@@ -82,7 +76,7 @@ The installer sets up a Kitty plugin. If you use Kitty terminal:
 ### List all logins
 
 ```bash
-ssh vault@YOUR_IP -p ${SSH_PORT:-7777} bw-list
+ssh vault@YOUR_IP -p ${SSH_PORT:-7777} bvl
 ```
 
 ## Available Commands
@@ -90,9 +84,13 @@ ssh vault@YOUR_IP -p ${SSH_PORT:-7777} bw-list
 | Command | Description |
 |---------|-------------|
 | `bw-unlock` | Unlock vault with master password |
+| `bw-state` | Show session status |
+| `bw-list` | List all items (name \| username) |
+| `bw-list <name>` | Show detailed info for item |
+| `bw-add` | Add new item |
+| `bw-remove` | Remove item |
 | `bw-fzf` | Interactive search, saves to `/dev/shm/bw_last` |
 | `bw-getpw` | Print password from file, then delete file |
-| `bw-list` | List all vault items |
 | `bw` | Direct Bitwarden CLI access |
 
 ## Configuration
@@ -126,6 +124,65 @@ docker compose logs vault
 
 # Restart
 docker compose restart
+```
+
+## SSH Configuration
+
+Add this to your `~/.ssh/config`:
+
+```ssh
+Host vault
+    HostName localhost
+    User vault
+    Port 7777
+    IdentityFile ~/.ssh/id_rsa
+```
+
+## Aliases
+
+Short aliases for common commands (add to your shell config):
+
+```bash
+# bv = bitwarden vault prefix
+alias bvs='ssh vault bvs'   # state
+alias bva='ssh vault bva'   # add (needs args)
+alias bvr='ssh vault bvr'   # remove (needs args)
+alias bvl='ssh vault bvl'   # list
+alias bvc='ssh vault bvc'   # choose (fzf)
+alias bvg='ssh vault bvg'   # get password
+alias bvu='ssh vault bvu'   # unlock
+
+# Functions for commands with arguments
+bva() { ssh vault bva "$@"; }
+bvr() { ssh vault bvr "$@"; }
+bvl() { ssh vault bvl "$@"; }
+```
+
+### Usage
+
+```bash
+bvs              # state
+bvl              # list all
+bvl github       # list specific item
+bvc              # choose password interactively
+bvg              # get last selected password
+bva user pass    # add item (arguments: name user pass [folder])
+bvr name --force # remove item
+bvu              # unlock vault
+```
+
+## Environment Variables
+
+Copy `env/.env-example` to `env/.env` and fill in your values:
+
+```bash
+SSH_PORT=7777
+BW_SERVER=https://vault.bitwarden.eu
+BW_CLIENTID=your_client_id
+BW_CLIENTSECRET=your_client_secret
+BW_SESSION_TTL=30
+BW_OUTPUT_FILE=/dev/shm/bw_last
+BW_SSH_PUBKEY=ssh-rsa AAAA...
 ```
 
 ## License
