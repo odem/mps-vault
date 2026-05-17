@@ -18,15 +18,15 @@ SSH access to your Bitwarden vault. No app install needed.
 
 ## Commands
 
-| Command | Alias | Description |
-|---------|-------|-------------|
-| `bw-unlock` | `bvu` | Unlock vault (enter master password) |
-| `bw-state` | `bvs` | Show session status |
-| `bw-list` | `bvl` | List all items (`bw-list <name>` for details) |
-| `bw-fzf` | `bvc` | Interactive search (fzf) |
-| `bw-getpw` | `bvg` | Get last selected password |
-| `bw-add` | `bva` | Add item: `bw-add <name> <user> <pass> [folder] [url]` |
-| `bw-remove` | `bvr` | Remove item: `bw-remove <name> [--force]` |
+| Command | Alias | Params | Description |
+|---------|-------|--------|-------------|
+| `bw-unlock` | `bvu` | - | Unlock vault (enter master password) |
+| `bw-state` | `bvs` | - | Show session status |
+| `bw-list` | `bvl` | `<name>` | List all items |
+| `bw-fzf` | `bvc` | - | Interactive search (fzf) |
+| `bw-getpw` | `bvg` | - | Get last selected password |
+| `bw-add` | `bva` | `<name> <user> <pass> [folder] [url]` | Add item |
+| `bw-remove` | `bvr` | `<name> [--force]` | Remove item |
 
 ## Configuration
 
