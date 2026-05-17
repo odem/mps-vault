@@ -1,0 +1,21 @@
+services:
+  vault:
+    build: ./container
+    container_name: vault
+    restart: unless-stopped
+    ports:
+      - "${SSH_PORT:-7777}:22"
+    tmpfs:
+      - /dev/shm:size=64m
+    secrets:
+      - bw_env
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+secrets:
+  bw_env:
+    file: ./env/.env

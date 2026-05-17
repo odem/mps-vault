@@ -1,0 +1,8 @@
+env/
+installer/
+.git/
+.gitignore
+.env*
+README*
+TODO*
+*.md
